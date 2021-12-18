@@ -154,4 +154,29 @@ public class BbsDAO {
 		}
 		return -1;  //  데이터베이스 오류
 	}
+	public ArrayList<Bbs> getSearch(String searchField, String searchText){//특정한 리스트를 받아서 반환
+	      ArrayList<Bbs> list = new ArrayList<Bbs>();
+	      String SQL ="select * from bbs WHERE "+searchField.trim();
+	      try {
+	            if(searchText != null && !searchText.equals("") ){ 
+	                SQL +=" LIKE '%"+searchText.trim()+"%' AND bbsAvailable = 1 order by bbsID desc limit 10";
+	            }
+	            PreparedStatement pstmt=conn.prepareStatement(SQL);
+				rs=pstmt.executeQuery();//select
+	         while(rs.next()) {
+	            Bbs bbs = new Bbs();
+	            bbs.setBbsID(rs.getInt(1));
+	            bbs.setBbsTitle(rs.getString(2));
+	            bbs.setUserID(rs.getString(3));
+	            bbs.setBbsDate(rs.getString(4));
+	            bbs.setBbsContent(rs.getString(5));
+	            bbs.setBbsAvailable(rs.getInt(6));
+	            list.add(bbs);		//list에 해당 인스턴스를 담는다.
+	         }         
+	      } catch(Exception e) {
+	         e.printStackTrace();
+	      }
+	      return list;		//게시글 리스트 반환
+	   }
+
 }

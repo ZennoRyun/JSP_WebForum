@@ -52,7 +52,7 @@ public class BbsDAO {
 	}
 	
 	public int write(String bbsTitle, String userID, String bbsContent) {
-		String SQL = "INSERT INTO BBS VALUES (?, ?, ?, ?, ?, ?)";
+		String SQL = "INSERT INTO BBS VALUES (?, ?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, getNext());
@@ -61,6 +61,7 @@ public class BbsDAO {
 			pstmt.setString(4, getDate());
 			pstmt.setString(5, bbsContent);
 			pstmt.setInt(6, 1);
+			pstmt.setInt(7, 0);
 			return pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -83,6 +84,7 @@ public class BbsDAO {
 				bbs.setBbsDate(rs.getString(4));
 				bbs.setBbsContent(rs.getString(5));
 				bbs.setBbsAvailable(rs.getInt(6));
+				bbs.setBbsRecommend(rs.getInt(7));
 				list.add(bbs);
 			}
 		} catch (Exception e) {
@@ -121,6 +123,7 @@ public class BbsDAO {
 				bbs.setBbsDate(rs.getString(4));
 				bbs.setBbsContent(rs.getString(5));
 				bbs.setBbsAvailable(rs.getInt(6));
+				bbs.setBbsRecommend(rs.getInt(7));
 				return bbs;
 			}
 		} catch (Exception e) {
@@ -154,6 +157,21 @@ public class BbsDAO {
 		}
 		return -1;  //  데이터베이스 오류
 	}
+	
+	public int recommend(int bbsRecommend, int bbsID) {
+		String SQL = "UPDATE BBS SET bbsRecommend = ? WHERE bbsID = ?";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, bbsRecommend + 1);
+			pstmt.setInt(2, bbsID);
+			return pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;  //  데이터베이스 오류
+		
+	}
+	
 	public ArrayList<Bbs> getSearch(String searchField, String searchText){//특정한 리스트를 받아서 반환
 	      ArrayList<Bbs> list = new ArrayList<Bbs>();
 	      String SQL ="select * from bbs WHERE "+searchField.trim();
@@ -171,6 +189,7 @@ public class BbsDAO {
 	            bbs.setBbsDate(rs.getString(4));
 	            bbs.setBbsContent(rs.getString(5));
 	            bbs.setBbsAvailable(rs.getInt(6));
+	            bbs.setBbsRecommend(rs.getInt(7));
 	            list.add(bbs);		//list에 해당 인스턴스를 담는다.
 	         }         
 	      } catch(Exception e) {
@@ -178,5 +197,30 @@ public class BbsDAO {
 	      }
 	      return list;		//게시글 리스트 반환
 	   }
+	
+	public ArrayList<Bbs> getRecommended(){//특정한 리스트를 받아서 반환
+	      ArrayList<Bbs> list = new ArrayList<Bbs>();
+	      String SQL ="select * from bbs WHERE bbsRecommend >= 10";
+	      try {
+	            PreparedStatement pstmt=conn.prepareStatement(SQL);
+				rs=pstmt.executeQuery();//select
+	         while(rs.next()) {
+	            Bbs bbs = new Bbs();
+	            bbs.setBbsID(rs.getInt(1));
+	            bbs.setBbsTitle(rs.getString(2));
+	            bbs.setUserID(rs.getString(3));
+	            bbs.setBbsDate(rs.getString(4));
+	            bbs.setBbsContent(rs.getString(5));
+	            bbs.setBbsAvailable(rs.getInt(6));
+	            bbs.setBbsRecommend(rs.getInt(7));
+	            list.add(bbs);		//list에 해당 인스턴스를 담는다.
+	         }         
+	      } catch(Exception e) {
+	         e.printStackTrace();
+	      }
+	      return list;		//게시글 리스트 반환
+	   }
+	
+	
 
 }

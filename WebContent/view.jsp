@@ -97,6 +97,10 @@
 						<td colspan="2"><%= bbs.getUserID() %></td>
 					</tr>
 					<tr>
+						<td>추천 수</td>
+						<td colspan="2"><%= bbs.getBbsRecommend() %></td>
+					</tr>
+					<tr>
 						<td>작성일자</td>
 						<td colspan="2"><%= bbs.getBbsDate().substring(0, 11) + bbs.getBbsDate().substring(11, 13) + "시 " + bbs.getBbsDate().substring(14, 16) + "분 " %></td>
 					</tr>
@@ -113,6 +117,7 @@
 			%>
 					<a href="update.jsp?bbsID=<%= bbsID %>" class="btn btn-primary">수정</a>
 					<a onclick="return confirm('정말로 삭제하시겠습니까?')" href="deleteAction.jsp?bbsID=<%= bbsID %>" class="btn btn-primary">삭제</a>
+					<a onclick="return alert('추천하였습니다.')" href="recommendAction.jsp?bbsID=<%= bbsID %>" class="btn btn-primary">추천</a>
 			<%
 				}
 			%>

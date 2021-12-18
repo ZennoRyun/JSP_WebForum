@@ -83,18 +83,6 @@
 	</nav>
 	<div class="container">
 		<div class="row">
-			<form method="post" name="search" action="recommendedBbs.jsp">
-				<table class="pull-left">
-					<tr>
-						<td><button type="submit" class="btn btn-success">인기글</button></td>
-					</tr>
-
-				</table>
-			</form>
-		</div>
-	</div>
-	<div class="container">
-		<div class="row">
 			<form method="post" name="search" action="searchBbs.jsp">
 				<table class="pull-right">
 					<tr>
@@ -124,11 +112,19 @@
 						<th style="background-color: #eeeeee; text-align: center;">추천 수</th>
 					</tr>
 				</thead>
+				
 				<tbody>
 					<%
 						BbsDAO bbsDAO = new BbsDAO();
-						ArrayList<Bbs> list = bbsDAO.getList(pageNumber);
-						for(int i = 0; i < list.size(); i++) {
+						ArrayList<Bbs> list = bbsDAO.getRecommended();
+						if (list.size() == 0) {
+							PrintWriter script = response.getWriter();
+							script.println("<script>");
+							script.println("alert('추천수 10 이상인 게시글이 없습니다.')");
+							script.println("history.back()");
+							script.println("</script>");
+						}
+						for (int i = 0; i < list.size(); i++) {
 					%>
 					<tr>
 						<td><%= list.get(i).getBbsID() %></td>
@@ -141,6 +137,7 @@
 						}
 					%>
 				</tbody>
+				 
 			</table>
 			<%
 				if(pageNumber != 1) {
@@ -154,6 +151,7 @@
 				}
 			%>
 			<a href="write.jsp" class="btn btn-primary pull-right">글쓰기</a>
+			
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>

@@ -200,7 +200,7 @@ public class BbsDAO {
 	
 	public ArrayList<Bbs> getRecommended(){//특정한 리스트를 받아서 반환
 	      ArrayList<Bbs> list = new ArrayList<Bbs>();
-	      String SQL ="select * from bbs WHERE bbsRecommend >= 10";
+	      String SQL ="select * from bbs WHERE bbsRecommend >= 10 AND bbsAvailable = 1";
 	      try {
 	            PreparedStatement pstmt=conn.prepareStatement(SQL);
 				rs=pstmt.executeQuery();//select
